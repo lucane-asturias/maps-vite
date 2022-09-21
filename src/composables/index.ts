@@ -1,1 +1,1 @@
-export { usePlacesStore } from './usePlacesStore'
+export { usePlaces } from './usePlaces'

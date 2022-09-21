@@ -1,4 +1,4 @@
-import { /*computed,*/ onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { usePlacesStore } from '@/stores/placesStore'
 
 export const usePlaces = () => {
@@ -9,20 +9,19 @@ export const usePlaces = () => {
     if (!placesStore.isUserLocationReady) {
       return placesStore.setLongitudeLatitude()
     }
-    console.log('nfoi')
   })
 
-  // return {
-  //   // State
-  //   // isLoading: computed(() => store.state.places.isLoading),
-  //   // userLocation: computed(() => store.state.places.userLocation),
+  return {
+    // State
+    isLoading: computed(() => placesStore.isLoading),
+    userLocation: computed(() => placesStore.userLocation),
 
-  //   // // Getters
-  //   // isUserLocationReady: computed<boolean>(() => store.getters['places/isUserLocationReady']),
+    // Getters
+    isUserLocationReady: computed<boolean>(() => placesStore.isUserLocationReady),
     
-  //   // // Actions
-  //   // searchPlacesByterm: ( query = '') => store.dispatch('places/searchPlacesByterm', query),
+    // Actions
+    // searchPlacesByterm: ( query = '') => store.dispatch('places/searchPlacesByterm', query),
 
-  //   // Mutations
-  // }
+    // Mutations
+  }
 }

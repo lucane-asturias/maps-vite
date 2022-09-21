@@ -1,10 +1,9 @@
 <template>
+  <MapView />
 </template>
 
 <script setup>
-  import { usePlaces } from '@/composables/usePlaces'
-
-  usePlaces()
+  import MapView from '@/components/MapView.vue'
 </script>
 
 <style lang="css" scoped>

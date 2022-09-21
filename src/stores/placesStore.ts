@@ -15,7 +15,8 @@ export const usePlacesStore = defineStore('placesStore', {
     setLongitudeLatitude(payload) {
       const success = ({ coords }) => {
         console.log('coords', coords)
-        this.userLocation = coords
+        const { longitude, latitude } = coords
+        this.userLocation = [ longitude, latitude ]
       }
       const error = (err) => {
         console.log(err);

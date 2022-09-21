@@ -13,6 +13,6 @@ if (!navigator.geolocation) {
 }
 
 createApp(App)
-  .use(router)
   .use(createPinia())
+  .use(router)
   .mount('#app')
