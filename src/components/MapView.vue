@@ -15,16 +15,56 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
-  import { usePlaces } from '@/composables'
-  import MapView from '@/components/MapView.vue'
+  import { ref, watch, onMounted } from 'vue'
+  import { usePlaces, useMap } from '@/composables'
+  import Mapboxgl from 'mapbox-gl'
 
   const mapElement = ref<HTMLDivElement>()
   const { userLocation, isUserLocationReady } = usePlaces()
+  const { setMap } = useMap()
+
+  const initMap = async () => {
+    if (!mapElement.value) throw new Error('Div element does not exists')
+    if (!userLocation) throw new Error('userLocation does not exists') 
+
+    await Promise.resolve()
+
+    console.log('userLocation', userLocation.value)
+
+    const map = new Mapboxgl.Map({
+      container: mapElement.value, // container ID
+      style: 'mapbox://styles/mapbox/satellite-streets-v11', // style URL
+      center: userLocation.value, // starting position [lng, lat]
+      zoom: 13 // starting zoom
+    })
+
+    // add zoom and rotation controls to the map.
+    map.addControl(new Mapboxgl.NavigationControl());
+
+    // offset is the distance of the popup box from the marker
+    const myLocationPopup = new Mapboxgl.Popup({ offset: [0, -25] })
+      .setHTML(`
+        <h4>I am here</h4>
+        <p>${userLocation.value}</p
+      `)
+
+    const myLocationMarker = new Mapboxgl.Marker()
+      .setLngLat(userLocation.value) //set latitude and longitude (where it should go)
+      .setPopup(myLocationPopup) // set popup on that marker, which is what should happen when a user clicks
+      .addTo(map)
+
+    setMap(map) // centralizing and defining the map in Pinia
+  }
 
   onMounted(() => {
     console.log('mapElement.value', mapElement.value)
+    if (isUserLocationReady.value) return initMap()
   })
+
+  watch(isUserLocationReady, (newVal) => {
+    if (isUserLocationReady.value) initMap()
+  })
+
 </script>
 
 <style lang="css" scoped>

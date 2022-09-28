@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { auth } from "@/utils/firebase";
 
 export type PlacesState = {
   isLoading: boolean
@@ -12,7 +11,7 @@ export const usePlacesStore = defineStore('placesStore', {
     userLocation: undefined
   } as PlacesState),
   actions: {
-    setLongitudeLatitude(payload) {
+    setLongitudeLatitude() {
       const success = ({ coords }) => {
         console.log('coords', coords)
         const { longitude, latitude } = coords
