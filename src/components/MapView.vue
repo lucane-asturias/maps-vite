@@ -25,11 +25,9 @@
 
   const initMap = async () => {
     if (!mapElement.value) throw new Error('Div element does not exists')
-    if (!userLocation) throw new Error('userLocation does not exists') 
+    if (!userLocation.value) throw new Error('userLocation does not exists') 
 
     await Promise.resolve()
-
-    console.log('userLocation', userLocation.value)
 
     const map = new Mapboxgl.Map({
       container: mapElement.value, // container ID
@@ -57,7 +55,6 @@
   }
 
   onMounted(() => {
-    console.log('mapElement.value', mapElement.value)
     if (isUserLocationReady.value) return initMap()
   })
 

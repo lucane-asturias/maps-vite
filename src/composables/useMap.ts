@@ -9,7 +9,10 @@ export const useMap = () => {
     // State
     map: computed(() => mapStore.map),
 
-    // Mutations
+    // Getters
+    isMapReady: computed<boolean>(() => mapStore.isMapReady),
+
+    // Actions
     setMap: (map: Mapboxgl.Map) => mapStore.setMap(map)
   }
 }

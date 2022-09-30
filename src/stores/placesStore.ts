@@ -13,7 +13,6 @@ export const usePlacesStore = defineStore('placesStore', {
   actions: {
     setLongitudeLatitude() {
       const success = ({ coords }) => {
-        console.log('coords', coords)
         const { longitude, latitude } = coords
         this.userLocation = [ longitude, latitude ]
       }
