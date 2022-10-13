@@ -1,14 +1,20 @@
 import { defineStore } from 'pinia'
+import { searchApi } from '@/apis'
+import { Feature, PlacesResponse } from '@/interfaces/places'
 
 export type PlacesState = {
   isLoading: boolean
   userLocation?: [number, number] // lng, lat
+  isLoadingPlaces: boolean
+  places: Feature[]
 }
 
 export const usePlacesStore = defineStore('placesStore', {
   state: () => ({
     isLoading: true,
-    userLocation: undefined
+    userLocation: undefined,
+    isLoadingPlaces: false,
+    places: []
   } as PlacesState),
   actions: {
     setLongitudeLatitude() {
@@ -25,6 +31,28 @@ export const usePlacesStore = defineStore('placesStore', {
       
       this.isLoading = false
     },
+    async searchPlacesByTerm(queryPayload: string): Promise<Feature[]> {
+      if (!this.userLocation) throw new Error('There is no user location')
+      if (queryPayload.length === 0) { 
+        this.setPlaces([])
+        return []
+      }
+
+      this.isLoadingPlaces = true // estado de carga
+
+      const response = await searchApi.get<PlacesResponse>(`/${queryPayload}.json`, {
+        params: {
+          proximity: this.userLocation?.join(',')
+        }
+      })
+      console.log('response', response.data)
+      this.setPlaces(response.data.features)
+      return response.data.features
+    },
+    setPlaces(payloadPlaces: Feature[]) {
+      this.isLoadingPlaces = false
+      this.places = payloadPlaces
+    }
   },
   getters: {
     isUserLocationReady: (state) => {

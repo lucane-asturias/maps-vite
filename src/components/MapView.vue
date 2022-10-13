@@ -41,13 +41,14 @@
 
     // offset is the distance of the popup box from the marker
     const myLocationPopup = new Mapboxgl.Popup({ offset: [0, -25] })
+      .setLngLat(userLocation.value)
       .setHTML(`
         <h4>I am here</h4>
         <p>${userLocation.value}</p
       `)
 
     const myLocationMarker = new Mapboxgl.Marker()
-      .setLngLat(userLocation.value) //set latitude and longitude (where it should go)
+      .setLngLat(userLocation.value) // set latitude and longitude (where it should go)
       .setPopup(myLocationPopup) // set popup on that marker, which is what should happen when a user clicks
       .addTo(map)
 
