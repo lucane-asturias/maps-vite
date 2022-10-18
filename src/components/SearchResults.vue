@@ -18,6 +18,7 @@
         <button 
           class="btn btn-sm"
           :class="place.id !== activePlace ? 'btn-outline-primary': 'btn-outline-light'"
+          @click.self="getRouteDirections(place)"
         >
           Directions
         </button>
@@ -28,13 +29,18 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import { usePlaces, useMap } from '@/composables'
   import { Feature } from '@/interfaces/places'
 
-  const { isLoadingPlaces, places } = usePlaces()
-  const { map } = useMap()
+  const { isLoadingPlaces, places, userLocation } = usePlaces()
+  const { map, setPlaceMarkers, getRouteBetweenPoints } = useMap()
   const activePlace = ref('')
+
+  watch(places, (newPlaces) => {
+    activePlace.value = ''
+    setPlaceMarkers(newPlaces) // convert in markers
+  })
 
   const onPlaceClicked = (place: Feature) => { 
     activePlace.value = place.id
@@ -44,6 +50,18 @@
       center: [ lng, lat ],
       zoom: 18
     })
+  }
+
+  const getRouteDirections = (place: Feature) => { 
+    if (!userLocation.value) return
+      
+    const [ lng, lat ] = place.center
+    const [ startLng, startLat ] = userLocation.value
+
+    const start: [number, number] = [ startLng, startLat ]
+    const end: [number, number] = [ lng, lat ] 
+
+    getRouteBetweenPoints(start, end)
   }
 
 </script>

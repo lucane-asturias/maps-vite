@@ -1,5 +1,6 @@
 import { computed, onMounted } from 'vue'
-import { useMapStore, MapState } from '@/stores/mapStore'
+import { useMapStore, MapState, LngLat } from '@/stores/mapStore'
+import { Feature } from '@/interfaces/places'
 import Mapboxgl from 'mapbox-gl'
 
 export const useMap = () => {
@@ -8,11 +9,15 @@ export const useMap = () => {
   return {
     // State
     map: computed(() => mapStore.map),
+    distance: computed(() => mapStore.distance),
+    duration: computed(() => mapStore.duration),
 
     // Getters
     isMapReady: computed<boolean>(() => mapStore.isMapReady),
 
     // Actions
-    setMap: (map: Mapboxgl.Map) => mapStore.setMap(map)
+    setMap: (map: Mapboxgl.Map) => mapStore.setMap(map),
+    setPlaceMarkers: (places: Feature[]) => mapStore.setPlaceMarkers(places),
+    getRouteBetweenPoints: (start: LngLat, end: LngLat) => mapStore.getRouteBetweenPoints({ start, end })
   }
 }

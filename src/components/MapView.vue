@@ -47,7 +47,7 @@
         <p>${userLocation.value}</p
       `)
 
-    const myLocationMarker = new Mapboxgl.Marker()
+    const myLocationMarker = new Mapboxgl.Marker({ scale: 0.8 })
       .setLngLat(userLocation.value) // set latitude and longitude (where it should go)
       .setPopup(myLocationPopup) // set popup on that marker, which is what should happen when a user clicks
       .addTo(map)
