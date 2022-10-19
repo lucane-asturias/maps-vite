@@ -61,11 +61,17 @@ export const useMapStore = defineStore('mapStore', {
       console.log('disntace', distance)
       console.log('duration', duration)
       let kms = distance / 1000
-          kms = Math.round(kms / 100)
+          kms = Math.round(kms * 100)
           kms /= 100 // convert meter in kilometer
 
       this.distance = kms
-      this.duration = Math.floor(duration / 60) // convert minutes to hours
+
+      let minutes = Math.floor(duration / 60) 
+      let hours = minutes / 60
+          hours -= Math.round(hours)
+          hours *= 60 // convert minutes to hours
+
+      this.duration = hours
     },
     async getRouteBetweenPoints({ start, end }: { start: LngLat, end: LngLat }) {
       const response = await directionsApi.get<DirectionsResponse>(`${ start.join(',') };${ end.join(',') }`)
@@ -94,13 +100,13 @@ export const useMapStore = defineStore('mapStore', {
         const newCoord: [number, number] = [coord[0], coord[1]] // lat and lng
         bounds.extend( newCoord ) // expande os delimitadores (bounds) para incluir novas coordenadas
       }
-      // Center these bounds in the viewport and use the highest zoom level up that fits them in the viewport
+      // Center these bounds in the viewport
       this.map?.fitBounds( bounds, {
         padding: 200 // The amount of padding in pixels to add to the given bounds
       })
 
-      /* Trace Polyline - source: A map or layer source states which data the map should display. A source provides map data
-      that Mapbox GL JS can use with a style document to render a visual representation of that data. */
+      /* Trace Polyline - source: A map/layer source states which data the map should display. 
+      A source provides map data that MapboxGL JS can use to render a visual representation of that data. */
       const soucerData: Mapboxgl.AnySourceData = {
         type: 'geojson',
         data: {
