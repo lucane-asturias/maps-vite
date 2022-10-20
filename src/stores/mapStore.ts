@@ -9,6 +9,8 @@ export interface MapState {
   markers: Mapboxgl.Marker[]
   distance?: number
   duration?: number
+  hours?: number
+  minutes?: number
 }
 
 export type LngLat = [ number, number ]
@@ -18,7 +20,9 @@ export const useMapStore = defineStore('mapStore', {
     map: undefined,
     markers: [],
     distance: undefined,
-    duration: undefined
+    duration: undefined,
+    hours: undefined,
+    minutes: undefined
   } as MapState),
   actions: {
     setMap(mapPayload: Mapboxgl.Map) {
@@ -55,6 +59,8 @@ export const useMapStore = defineStore('mapStore', {
         this.map.removeSource('PolylineString')
         this.distance = undefined
         this.duration = undefined
+        this.hours = undefined
+        this.minutes = undefined
       }
     },
     setDistanceDuration({ distance, duration }: { distance: number, duration: number }) {
@@ -66,12 +72,16 @@ export const useMapStore = defineStore('mapStore', {
 
       this.distance = kms
 
-      let minutes = Math.floor(duration / 60) 
-      let hours = minutes / 60
-          hours -= Math.round(hours)
-          hours *= 60 // convert minutes to hours
+      let minutesPerHour = Math.floor(duration / 60)
+      let resultHours = minutesPerHour / 60
+      let resultMinutes = resultHours - Math.floor(resultHours)
+          resultMinutes *= 60
 
-      this.duration = hours
+      const convertedHours = Math.floor(resultHours)
+      const convertedMinutes = Math.round(resultMinutes)
+
+      this.hours = convertedHours
+      this.minutes = convertedMinutes
     },
     async getRouteBetweenPoints({ start, end }: { start: LngLat, end: LngLat }) {
       const response = await directionsApi.get<DirectionsResponse>(`${ start.join(',') };${ end.join(',') }`)
@@ -85,7 +95,6 @@ export const useMapStore = defineStore('mapStore', {
       this.setRoutePolyline(response.data.routes[0].geometry.coordinates)
     },
     setRoutePolyline(coords: number[][]) {
-      console.log('coords', coords)
       const start = coords[0] // initial point
       const end   = coords[ coords.length - 1 ] // end/final point
 

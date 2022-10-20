@@ -2,7 +2,7 @@
   <div>
 
     <div v-if="!isUserLocationReady"
-      class="loading-map d-flex justifiy-content-center align-items-center">
+      class="loading-map d-flex justify-content-center align-items-center">
       <div class="text-center">
         <h3>Espere por favor</h3>
         <span>Localizando...</span>

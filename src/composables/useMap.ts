@@ -10,7 +10,8 @@ export const useMap = () => {
     // State
     map: computed(() => mapStore.map),
     distance: computed(() => mapStore.distance),
-    duration: computed(() => mapStore.duration),
+    hours: computed(() => mapStore.hours),
+    minutes: computed(() => mapStore.minutes),
 
     // Getters
     isMapReady: computed<boolean>(() => mapStore.isMapReady),
